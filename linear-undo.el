@@ -153,7 +153,7 @@ See also `buffer-undo-list'.")
 
 (defvar linear-undo/.last-buffer-undo-list nil
   "Internal variable to detect if a buffer is edited or not
-after last undo/redo command."
+after last undo/redo command.")
 (make-variable-buffer-local 'linear-undo/.last-buffer-undo-list)
 
 
