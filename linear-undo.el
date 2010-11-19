@@ -6,7 +6,7 @@
 ;; Keywords: emulation wp
 ;; Revision: $Id$
 ;; URL: 
-;; GitHub: 
+;; GitHub: http://github.com/k-talo/linear-undo.el
 
 ;; This file is not part of GNU Emacs.
 
