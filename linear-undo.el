@@ -74,6 +74,7 @@
 ;;   is on.
 
 ;;; Change Log:
+;; v5.1 12/27/2010  Fixed compiler errors and a typo.
 ;; v5.0 11/19/2010  Renamed to `linear-undo.el'.
 ;;                  Heavily arranged codes.
 ;;                  Moved repository from subversion to git.
@@ -109,6 +110,8 @@
 
 
 ;;; Code:
+(eval-when-compile
+  (require 'cl))
 
 (defvar linear-undo/version "5.0")
 (defun linear-undo/version ()
@@ -360,7 +363,7 @@ after last undo/redo command.")
     (setq chunk-lst-to-redo 
           (remove-if #'integerp chunk-lst-to-redo))
     ;; XXX: Experimental 2010/11/5
-    (setq chunk-lst-to-redos
+    (setq chunk-lst-to-redo
           (remove-if (lambda (elt) (markerp (car elt))) chunk-lst-to-redo))
     
     ;; Push `chunk-lst-to-redo' to `redo-lst'.
