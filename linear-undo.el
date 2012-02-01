@@ -1,4 +1,4 @@
-;;; linear-undo.el -- undo/redo without making undo tree.
+;;; linear-undo.el --- Intuitive undo/redo.
 
 ;; Copyright (C) 2001-2003, 2010 K-talo Miyazaki, all rights reserved.
 ;; Author: K-talo Miyazaki <Keitaro dot Miyazaki at gmail dot com>
@@ -7,6 +7,7 @@
 ;; Revision: $Id$
 ;; URL: 
 ;; GitHub: http://github.com/k-talo/linear-undo.el
+;; Version: 5.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -53,6 +54,7 @@
 ;; .emacs startup file:
 ;;
 ;;    (require 'linear-undo)
+;;    (linear-undo-mode t)
 ;;
 ;;
 ;; USING
@@ -74,6 +76,8 @@
 ;;   is on.
 
 ;;; Change Log:
+;; v5.2 02/04/2012  Fixed compiler errors.
+;;                  Fixed errors which occurs to XEmacs.
 ;; v5.1 12/27/2010  Fixed compiler errors and a typo.
 ;; v5.0 11/19/2010  Renamed to `linear-undo.el'.
 ;;                  Heavily arranged codes.
@@ -113,12 +117,58 @@
 (eval-when-compile
   (require 'cl))
 
-(defvar linear-undo/version "5.0")
+(defvar linear-undo/version "5.2")
 (defun linear-undo/version ()
   (interactive)
   (message "linear-undo version %s" linear-undo/version))
 
 
+;;;============================================================================
+;;;
+;;;  Private Variables.
+;;;
+;;;============================================================================
+
+(eval-and-compile
+  (defconst linear-undo/.xemacsp (string-match "XEmacs" emacs-version)
+    "A flag if the emacs is xemacs or not."))
+
+
+;;;============================================================================
+;;;
+;;;  Suppress compiler warnings regarding to emacs/xemacs private functions.
+;;;
+;;;============================================================================
+(eval-when-compile
+  (dolist (func (cond (linear-undo/.xemacsp
+                       '(minibufferp
+                         define-key-after))
+                      (t
+                       '(add-menu-button
+                         delete-menu-button
+                         delete-menu-item))))
+      (when (not (fboundp func))
+        (setf (symbol-function func) (lambda (&rest args))))))
+
+(eval-and-compile
+  (cond
+   ;; XEmacs
+   (linear-undo/.xemacsp
+    (defun linear-undo/.minibufferp (buf)
+      (string-match "^ \\*Minibuf-[0-9]+\\*$"
+                    (cond
+                     ((stringp buf)
+                      buf)
+                     ((bufferp buf)
+                      (buffer-name buf))
+                     (t
+                      (error "Wrong type argument bufferp %S" 123))))))
+   ;; GNU Emacs
+   (t
+    (defun linear-undo/.minibufferp (buf)
+      (funcall 'minibufferp buf)))))
+
+;; 
 ;;; ===========================================================================
 ;;;
 ;;;  Customazable things.
@@ -224,7 +274,7 @@ after last undo/redo command.")
       (error "Can't undo! Something is wrong with `buffer-undo-list'!"))
   
   ;; Display message.
-  (when (not (minibufferp (window-buffer (selected-window))))
+  (when (not (linear-undo/.minibufferp (window-buffer (selected-window))))
     (message "Undo..."))
   
   (let ((buf-modefied-since-last-undo-p
@@ -271,7 +321,7 @@ after last undo/redo command.")
       (error "Can't redo! Something is wrong with the `linear-undo/buffer-redo-list'!"))
 
   ;; Display message.
-  (when (not (minibufferp (window-buffer (selected-window))))
+  (when (not (linear-undo/.minibufferp (window-buffer (selected-window))))
       (message "Redo..."))
 
   (let ((buf-modefied-since-last-undo-p
