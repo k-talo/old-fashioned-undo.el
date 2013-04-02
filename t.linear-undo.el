@@ -1,4 +1,4 @@
-;;; t.linear-undo.el -- Tests for linear-undo.el
+;;; t.old-fashioned-undo.el -- Tests for old-fashioned-undo.el
 
 ;; Copyright (C) 2010 K-talo Miyazaki, all rights reserved.
 ;; Author: K-talo Miyazaki <Keitaro dot Miyazaki at gmail dot com>
@@ -6,7 +6,7 @@
 ;; Keywords: emulation wp
 ;; Revision: $Id$
 ;; URL: 
-;; GitHub: http://github.com/k-talo/linear-undo.el
+;; GitHub: http://github.com/k-talo/old-fashioned-undo.el
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,87 +29,87 @@
 (eval-when-compile
   (require 'el-test-more))
 
-(require 'linear-undo)
+(require 'old-fashioned-undo)
 
-;; Test `linear-undo/lst/split'.
+;; Test `old-fashioned-undo/lst/split'.
 ;;
 (let ((lst nil))
-  (etm/eq (linear-undo/lst/get-next lst :chunk-p nil)
+  (etm/eq (old-fashioned-undo/lst/get-next lst :chunk-p nil)
           nil
-          "linear-undo/lst/get-next: 1"))
+          "old-fashioned-undo/lst/get-next: 1"))
 
 (let ((lst nil))
-  (etm/eq (linear-undo/lst/get-next lst :chunk-p t)
+  (etm/eq (old-fashioned-undo/lst/get-next lst :chunk-p t)
           nil
-          "linear-undo/lst/get-next: 2"))
+          "old-fashioned-undo/lst/get-next: 2"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d"))))
-  (etm/equal (linear-undo/lst/get-next lst :chunk-p nil)
+  (etm/equal (old-fashioned-undo/lst/get-next lst :chunk-p nil)
              '(("b") ("c") nil ("d"))
-             "linear-undo/lst/get-next: 3"))
+             "old-fashioned-undo/lst/get-next: 3"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d"))))
-  (etm/equal (linear-undo/lst/get-next lst :chunk-p t)
+  (etm/equal (old-fashioned-undo/lst/get-next lst :chunk-p t)
              '(nil ("d"))
-             "linear-undo/lst/get-next: 4"))
+             "old-fashioned-undo/lst/get-next: 4"))
 
 
-;; Test `linear-undo/lst/split'.
+;; Test `old-fashioned-undo/lst/split'.
 ;;
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 0)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 0)
              0
-             "linear-undo/lst/split: 0")
+             "old-fashioned-undo/lst/split: 0")
   (etm/equal lst
              '(nil ("a") ("b") ("c") nil ("d") ("e"))
-             "linear-undo/lst/split: 0"))
+             "old-fashioned-undo/lst/split: 0"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 1)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 1)
              1
-             "linear-undo/lst/split: 1")
+             "old-fashioned-undo/lst/split: 1")
   (etm/equal lst
              '(nil ("a") nil ("b") ("c") nil ("d") ("e"))
-             "linear-undo/lst/split: 1"))
+             "old-fashioned-undo/lst/split: 1"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 2)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 2)
              2
-             "linear-undo/lst/split: 2")
+             "old-fashioned-undo/lst/split: 2")
   (etm/equal lst
              '(nil ("a") nil ("b") nil ("c") nil ("d") ("e"))
-             "linear-undo/lst/split: 2"))
+             "old-fashioned-undo/lst/split: 2"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 3)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 3)
              2
-             "linear-undo/lst/split: 3")
+             "old-fashioned-undo/lst/split: 3")
   (etm/equal lst
              '(nil ("a") nil ("b") nil ("c") nil ("d") ("e"))
-             "linear-undo/lst/split: 3"))
+             "old-fashioned-undo/lst/split: 3"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 3)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 3)
              2
-             "linear-undo/lst/split: 3")
+             "old-fashioned-undo/lst/split: 3")
   (etm/equal lst
              '(nil ("a") nil ("b") nil ("c") nil ("d") ("e"))
-             "linear-undo/lst/split: 3"))
+             "old-fashioned-undo/lst/split: 3"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 4)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 4)
              3
-             "linear-undo/lst/split: 4")
+             "old-fashioned-undo/lst/split: 4")
   (etm/equal lst
              '(nil ("a") nil ("b") nil ("c") nil ("d") nil ("e"))
-             "linear-undo/lst/split: 4"))
+             "old-fashioned-undo/lst/split: 4"))
 
 (let ((lst '(nil ("a") ("b") ("c") nil ("d") ("e"))))
-  (etm/=     (linear-undo/lst/split lst :limit 5)
+  (etm/=     (old-fashioned-undo/lst/split lst :limit 5)
              3
-             "linear-undo/lst/split: 5")
+             "old-fashioned-undo/lst/split: 5")
   (etm/equal lst
              '(nil ("a") nil ("b") nil ("c") nil ("d") nil ("e"))
-             "linear-undo/lst/split: 5"))
+             "old-fashioned-undo/lst/split: 5"))
 
 ;; t.lenear-undo.el ends here

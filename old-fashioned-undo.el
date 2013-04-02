@@ -1,4 +1,4 @@
-;;; old-fashioned-undo.el --- Undo/Redo in an old fashioned manner.
+;;; old-fashioned-undo.el --- Undo/Redo in an old fashioned way.
 
 ;; Copyright (C) 2001-2003, 2010, 2013 K-talo Miyazaki, all rights reserved.
 ;; Author: K-talo Miyazaki <Keitaro dot Miyazaki at gmail dot com>
@@ -34,16 +34,21 @@
 ;; Overview
 ;; ========
 ;;
-;; This library provides minor mode `old-fashioned-undo-mode' which makes
-;; undo and redo command not to record undo/redo elements in
-;; tree structure, by inhibiting to record undo/redo operations
-;; to buffer-undo-list.
+;; This library provides minor mode `old-fashioned-undo-mode' which
+;; makes `undo' and `redo' command working in an old fashioned way.
 ;;
-;; I believe this minor mode brings intuitive way to undo/redo.
+;; The default `undo/redo' commands provided by emacs records each 
+;; `undo/redo' operations on `buffer-undo-list'. This behavior may
+;; make undo/redo operations perfect, but I feel this behavior is
+;; too much verbose and little bit annoying.
 ;;
-;; Additionally, while `old-fashioned-undo-mode' is on, count of pending
-;; undo/redo elements will be displayed after each undo/redo
-;; command is executed.
+;; The undo/redo command provided this library never records
+;; `undo/redo' operation on `buffer-undo-list' so that we can
+;; `undo/redo' in intuitive way.
+;;
+;; Additionally, while `old-fashioned-undo-mode' is on, the number
+;; of pending `undo/redo' operation will be displayed in the
+;; minibuffer when each `undo/redo' command is executed.
 ;;
 ;;
 ;; INSTALLING
@@ -177,13 +182,13 @@
 ;;; ===========================================================================
 
 (defgroup old-fashioned-undo nil
-  "Undo/Redo commands, without making undo tree."
+  "Undo/Redo in an old fashioned way."
   :tag "Old Fashioned Undo"
   :group 'undo)
 
 (defcustom old-fashioned-undo/allow-remove-boundary-p nil
   "Usually, `undo' command with numeric argument removes undo boundaries
-in a series of the undo operation from buffer-undo-list.
+in a series of the undo operation from `buffer-undo-list'.
 
 When `nil' is set to this variable, undo buouaries will not removed
 even if prefix argument is passed or not."
@@ -197,7 +202,7 @@ even if prefix argument is passed or not."
 ;;;
 ;;; ===========================================================================
 
-;; We use original 'buffer-undo-list' in this library.
+;; We use original `buffer-undo-list' in this library.
 
 (defvar old-fashioned-undo/buffer-redo-list nil
   "List of redo entries in current buffer.
@@ -206,7 +211,7 @@ See also `buffer-undo-list'.")
 (make-variable-buffer-local 'old-fashioned-undo/buffer-redo-list)
 
 (defvar old-fashioned-undo/.last-buffer-undo-list nil
-  "Internal variable to detect if a buffer is edited or not
+  "Private variable to detect if a buffer is edited or not
 after last undo/redo command.")
 (make-variable-buffer-local 'old-fashioned-undo/.last-buffer-undo-list)
 
@@ -221,7 +226,7 @@ after last undo/redo command.")
 ;;  (old-fashioned-undo/undo &optional arg) => VOID
 ;; ----------------------------------------------------------------------------
 (defun old-fashioned-undo/undo (&optional arg)
-  "Undo in an old fashioned manner. (without making undo-tree.)"
+  "Undo in an old fashioned way."
   (interactive "*p")
   (old-fashioned-undo/undo-aux :count (or arg 1) :by-chunk-p t))
 
@@ -229,7 +234,7 @@ after last undo/redo command.")
 ;;  (old-fashioned-undo/undo-1 &optional arg) => VOID
 ;; ----------------------------------------------------------------------------
 (defun old-fashioned-undo/undo-1 (&optional arg)
-  "Undo just one element in an old fashioned manner. (without making undo-tree.)"
+  "Undo just one element in an old fashioned way."
   (interactive "*p")
   (old-fashioned-undo/undo-aux :count (or arg 1) :by-chunk-p nil))
 
@@ -237,7 +242,7 @@ after last undo/redo command.")
 ;;  (old-fashioned-undo/redo &optional arg)
 ;; ----------------------------------------------------------------------------
 (defun old-fashioned-undo/redo (&optional arg)
-  "Redo in an old fashioned manner. (without making undo-tree.)"
+  "Redo in an old fashioned way."
   (interactive "*p")
   (old-fashioned-undo/redo-aux :count (or arg 1) :by-chunk-p t))
 
@@ -245,7 +250,7 @@ after last undo/redo command.")
 ;;  (old-fashioned-undo/redo-1 &optional arg)
 ;; ----------------------------------------------------------------------------
 (defun old-fashioned-undo/redo-1 (&optional arg)
-  "Redo just one element in an old fashioned manner. (without making undo-tree.)"
+  "Redo just one element in an old fashioned way."
   (interactive "*p")
   (old-fashioned-undo/redo-aux :count (or arg 1) :by-chunk-p nil))
 
@@ -356,7 +361,7 @@ after last undo/redo command.")
 ;;  (old-fashioned-undo/display-finish-info COMMAND_NAME REPEAT_COUNT) => VOID
 ;; ----------------------------------------------------------------------------
 (defun* old-fashioned-undo/display-finish-info (&key cmd-name count by-chunk-p)
-  "Display information of pending undo/redo."
+  "Display the number of pending undo/redo."
   (or (eq (selected-window) (minibuffer-window))
       (message "%s%s%s! [Undo: %d%s / Redo: %d%s]"
                ;; Name of current command.
@@ -646,7 +651,7 @@ Returns nil when no next element or chunk exists."
 ;;; ===========================================================================
 
 (easy-mmode-define-minor-mode
- old-fashioned-undo-mode "Minor mode for old fashioned undo."
+ old-fashioned-undo-mode "Minor mode for old fashioned undo/redo."
  :global t
  :init-value nil
  :lighter " LU"
