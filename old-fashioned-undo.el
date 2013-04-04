@@ -654,7 +654,7 @@ Returns nil when no next element or chunk exists."
  old-fashioned-undo-mode "Minor mode for old fashioned undo/redo."
  :global t
  :init-value nil
- :lighter " LU"
+ :lighter " OFU"
  (if (or (not (boundp 'old-fashioned-undo-mode))
          old-fashioned-undo-mode)
      (progn
