@@ -7,7 +7,7 @@
 ;; Revision: $Id$
 ;; URL: 
 ;; GitHub: http://github.com/k-talo/old-fashioned-undo.el
-;; Version: 5.2
+;; Version: 6.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -81,7 +81,7 @@
 ;;   is on.
 
 ;;; Change Log:
-;; v6.0 04/01/2013  Renamed to `old-fashioned-undo.el'.
+;; v6.0 04/04/2013  Renamed to `old-fashioned-undo.el'.
 ;; v5.2 02/04/2012  Fixed compiler errors.
 ;;                  Fixed errors which occurs to XEmacs.
 ;; v5.1 12/27/2010  Fixed compiler errors and a typo.
