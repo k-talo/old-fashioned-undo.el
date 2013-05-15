@@ -1,4 +1,4 @@
-;;; old-fashioned-undo.el --- Undo/Redo in an old fashioned way.
+;;; old-fashioned-undo.el --- Undo/Redo in very simple, and old fashioned way.
 
 ;; Copyright (C) 2001-2003, 2010, 2013 K-talo Miyazaki, all rights reserved.
 ;; Author: K-talo Miyazaki <Keitaro dot Miyazaki at gmail dot com>
