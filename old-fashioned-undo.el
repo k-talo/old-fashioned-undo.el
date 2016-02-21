@@ -7,7 +7,7 @@
 ;; Revision: $Id$
 ;; URL: 
 ;; GitHub: http://github.com/k-talo/old-fashioned-undo.el
-;; Version: 6.0
+;; Version: 6.1
 
 ;; This file is not part of GNU Emacs.
 
